@@ -1,0 +1,10 @@
+POST http://localhost:8000/api/user/register/
+Content-Type: application/json
+
+{
+  "username": "alireza3",
+  "phone_number": "09121122555",
+  "password": "tt123456"
+}
+
+###

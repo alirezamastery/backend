@@ -1,0 +1,2 @@
+GET http://localhost:8000/api/user/detail/18 'Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjA2NDIzNTM3LCJqdGkiOiI0ZTc3MmU2Nzk1Yzg0NzVlYTVjNzU0N2E4ZDg3ZWViYiIsInVzZXJfaWQiOjE4fQ.-w4jwTEplT5EKkpv0TSaz4jZDF0W41Kaj4JEPdHSPsE'
+Accept: application/json

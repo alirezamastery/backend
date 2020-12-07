@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="content-section">
+        <form method="Post">
+            {% csrf_token %}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">ایجاد حساب کاربری</legend>
+                {{ form|crispy }}
+            </fieldset>
+            <div>
+                <button class="btn btn-outline-info" type="submit">ایجاد حساب</button>
+            </div>
+        </form>
+        <div>
+            <small>
+                حساب کاربری دارید؟ <a class="ml-2" href="{% url 'users:user-login' %}">وارد شوید</a>
+            </small>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block side_bar %}
+    <div class="container content-section">
+        <p>something for the side</p>
+        <p>بعدا یه چی اینجا میذاریم</p>
+    </div>
+{% endblock %}
