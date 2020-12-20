@@ -5,11 +5,21 @@ from rest_framework import generics
 from rest_framework.filters import OrderingFilter , SearchFilter
 from rest_framework import viewsets
 from rest_framework import permissions
-from django_filters.rest_framework import DjangoFilterBackend
+from django_filters.rest_framework import DjangoFilterBackend , FilterSet
+from django_filters import rest_framework as filters
 
 from ..models import Product
 from ..serializers import ProductSerializer
 from .pagination import ListViewPagination , CustomPagination
+
+
+class ProductFilter(FilterSet):
+    min_price = filters.NumberFilter(field_name="price" , lookup_expr='gte')
+    max_price = filters.NumberFilter(field_name="price" , lookup_expr='lte')
+
+    class Meta:
+        model = Product
+        fields = ['price' , 'min_price' , 'max_price']
 
 
 class ProductViewSet(viewsets.ReadOnlyModelViewSet):  # this class handles both list view and detail view!
@@ -22,6 +32,8 @@ class ProductViewSet(viewsets.ReadOnlyModelViewSet):  # this class handles both 
         OrderingFilter ,
     ]
     search_fields = ['name']
+    # filterset_fields = ['price']  # eg: ?price=10
+    filterset_class = ProductFilter  # can not be used with "filterset_fields" at the same time
     ordering_fields = ['created_date' , 'price']
     ordering = ['-created_date']
 
