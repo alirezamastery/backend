@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse_lazy
 from django.utils import timezone
+from django.utils.text import slugify
 from PIL import Image
 
 User = settings.AUTH_USER_MODEL
@@ -15,7 +16,7 @@ class Product(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     inventory = models.IntegerField(default=0)
     featured = models.BooleanField(default=False)
-    slug = models.SlugField(allow_unicode=True , unique=True)  # TODO add automatic slug creator
+    slug = models.SlugField(allow_unicode=True , unique=True , editable=False)  # TODO add automatic slug creator
 
     def __str__(self):
         return self.name
@@ -24,7 +25,12 @@ class Product(models.Model):
         return reverse_lazy('products:product-detail' , kwargs={'pk': self.pk})
 
     def save(self , *args , **kwargs):
-        super().save()
+        if not self.id:
+            print('new object named:' , self.name)
+            # Newly created object, so set slug
+            self.slug = slugify(self.name , allow_unicode=True)
+
+        super().save(*args , **kwargs)
 
         img = Image.open(self.image.path)
         if img.height > 300 or img.width > 300:
