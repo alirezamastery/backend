@@ -26,7 +26,8 @@ SECRET_KEY = 'n7h4lr9voxa=e2+!7%3in)zftyr!qk9=5ad(^7+^lwies)sdmg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1' , 'localhost' , 'desktop-luuvudq']
+# ALLOWED_HOSTS = ['127.0.0.1' , 'localhost' , 'desktop-luuvudq']
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -43,7 +44,7 @@ INSTALLED_APPS = [
     'crispy_forms' ,
     'corsheaders' ,
     'rest_framework_simplejwt.token_blacklist' ,
-    'webpack_loader',
+    'webpack_loader' ,
     # internal
     'products' ,
     'snippets' ,
@@ -152,12 +153,13 @@ if DEBUG:
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES':     [
+        # 'rest_framework.permissions.IsAuthenticated' ,
         'rest_framework.permissions.AllowAny' ,
     ] ,
-    # 'DEFAULT_AUTHENTICATION_CLASSES': (
-    #     'rest_framework_simplejwt.authentication.JWTAuthentication' ,
-    #     # 'rest_framework.authentication.SessionAuthentication' ,
-    # ) ,
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication' ,
+        # 'rest_framework.authentication.SessionAuthentication' ,
+    ) ,
     'DEFAULT_RENDERER_CLASSES':       DEFAULT_RENDERER_CLASSES
 
 }
@@ -165,6 +167,7 @@ REST_FRAMEWORK = {
 
 CORS_ORIGIN_ALLOW_ALL = True  # any website has access to my api
 CORS_URLS_REGEX = r'^/api/.*$'
+CORS_ALLOW_CREDENTIALS = False
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
@@ -197,8 +200,8 @@ SIMPLE_JWT = {
 }
 
 WEBPACK_LOADER = {
-  'DEFAULT': {
-    'BUNDLE_DIR_NAME': 'frontend/',
-    'STATS_FILE': os.path.join(BASE_DIR, 'webpack-stats.json')
-  }
+    'DEFAULT': {
+        'BUNDLE_DIR_NAME': 'frontend/' ,
+        'STATS_FILE':      os.path.join(BASE_DIR , 'webpack-stats.json')
+    }
 }

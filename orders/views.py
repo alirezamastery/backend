@@ -12,7 +12,7 @@ from products.models import Product
 
 
 class OrderCreate(APIView):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     def post(self , request , format='json'):
         serializer = OrderSerializer(data=request.data)
@@ -28,7 +28,7 @@ class OrderCreate(APIView):
 
 
 class OrderUpdate(APIView):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     # TODO what approach is better?: 1-add checkout=True in here and just send POST from frontend
     # TODO 2-send POST from frontend with checkout=True payload
@@ -49,7 +49,7 @@ class OrderUpdate(APIView):
 
 
 class OrderDelete(APIView):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     def post(self , request , format='json'):
         # order_id = request.data['order']  # just in case we need this data
@@ -72,16 +72,15 @@ class OrderDelete(APIView):
 
 
 class OrderItemCreate(APIView):
-    permission_classes = [AllowAny]
+    # permission_classes = [AllowAny]
 
     def post(self , request , format='json'):
         order_query = Order.objects.filter(user=request.user , checkout=False)
         if len(order_query) > 1:
-            return Response('there is still another open order' , status=status.HTTP_400_BAD_REQUEST)
+            return Response('there is still another open order' , status=status.HTTP_409_CONFLICT)
         order = order_query.first()
         product_id = request.data['item']
         product = Product.objects.filter(pk=product_id).first()
-        print('order:' , order , 'product:' , product)
         quantity = request.data['quantity']
 
         serializer = OrderItemSerializer(data=request.data)
