@@ -41,8 +41,8 @@ class UserDetailView(APIView):
             raise Http404
 
     def get(self , request , pk , format=None):
-        snippet = self.get_object(pk)
-        serializer = CustomUserSerializer(snippet)
+        user = self.get_object(pk)
+        serializer = CustomUserSerializer(user)
         return Response(serializer.data)
 
 

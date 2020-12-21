@@ -28,7 +28,6 @@ class Product(models.Model):
 
     def save(self , *args , **kwargs):
         if not self.id:
-            print('new object named:' , self.name)
             # Newly created object, so set slug
             slug_str = f'{self.name}'
             unique_slugify(self , slug_str)  # this snippet creates unique slugs

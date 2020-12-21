@@ -8,7 +8,6 @@ User = get_user_model()
 
 # @receiver(post_save , sender=User)
 def user_did_create(sender , instance , created , **kwargs):
-    print('in user_did_create')
     if created:
         Profile.objects.get_or_create(user=instance)
 

@@ -12,14 +12,13 @@ from products.models import Product
 
 
 class OrderCreate(APIView):
-
-    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self , request , format='json'):
         serializer = OrderSerializer(data=request.data)
         order_query = Order.objects.filter(user=request.user , checkout=False)
         if len(order_query) > 0:
-            return Response('there is still another open order' , status=status.HTTP_400_BAD_REQUEST)
+            return Response('there is still another open order' , status=status.HTTP_409_CONFLICT)
         if serializer.is_valid():
             order = serializer.save(user=request.user)
             if order:
@@ -29,54 +28,56 @@ class OrderCreate(APIView):
 
 
 class OrderUpdate(APIView):
-
-    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     # TODO what approach is better?: 1-add checkout=True in here and just send POST from frontend
     # TODO 2-send POST from frontend with checkout=True payload
     def post(self , request , format='json'):
         # order_id = request.data['order']  # just in case we need this data
         order_query = Order.objects.filter(user=request.user , checkout=False)
-        if len(order_query) > 1:
-            return Response('there is still another open order' , status=status.HTTP_400_BAD_REQUEST)
-        order = order_query[0]
+        if len(order_query) != 1:
+            if order_query.count() < 1:
+                return Response('no open order to update' , status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response('there are more than one open orders. dont know which on to close' ,
+                                status=status.HTTP_409_CONFLICT)
+        order = order_query.first()
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
-            order_updated = serializer.update(instance=order , validated_data=serializer.validated_data)
-            if order_updated:
-                json = serializer.data
-                return Response(json , status=status.HTTP_201_CREATED)
+            order.checkout = True
+            order.save()
+            if order.checkout:
+                return Response(f'updated order of {request.user} to checkout={order.checkout}' ,
+                                status=status.HTTP_200_OK)
 
         return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderDelete(APIView):
-
-    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self , request , format='json'):
         # order_id = request.data['order']  # just in case we need this data
         order_query = Order.objects.filter(user=request.user , checkout=False)
         if len(order_query) != 1:
             if len(order_query) < 1:
-                return Response('no open order to delete' , status=status.HTTP_400_BAD_REQUEST)
+                return Response('no open order to delete' , status=status.HTTP_404_NOT_FOUND)
             else:
-                return Response('there are more than one open orders. dont know whcich on to close' ,
-                                status=status.HTTP_400_BAD_REQUEST)
-        order = order_query[0]
+                return Response('there are more than one open orders. dont know which on to close' ,
+                                status=status.HTTP_409_CONFLICT)
+        order = order_query.first()
         serializer = OrderSerializer(data=request.data)
         if serializer.is_valid():
             order_deleted = order.delete()
             if order_deleted:
                 json = serializer.data
-                return Response(json , status=status.HTTP_201_CREATED)
+                return Response(json , status=status.HTTP_204_NO_CONTENT)
 
         return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderItemCreate(APIView):
-
-    # permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
 
     def post(self , request , format='json'):
         order_query = Order.objects.filter(user=request.user , checkout=False)
@@ -96,7 +97,7 @@ class OrderItemCreate(APIView):
                 json = serializer.data
                 return Response(json , status=status.HTTP_201_CREATED)
             else:
-                return Response(f'updated order item quantity to: {quantity}' , status=status.HTTP_202_ACCEPTED)
+                return Response(f'updated order item quantity to: {quantity}' , status=status.HTTP_200_OK)
 
         return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
 
