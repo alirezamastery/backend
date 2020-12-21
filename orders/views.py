@@ -12,6 +12,7 @@ from products.models import Product
 
 
 class OrderCreate(APIView):
+
     # permission_classes = [AllowAny]
 
     def post(self , request , format='json'):
@@ -28,6 +29,7 @@ class OrderCreate(APIView):
 
 
 class OrderUpdate(APIView):
+
     # permission_classes = [AllowAny]
 
     # TODO what approach is better?: 1-add checkout=True in here and just send POST from frontend
@@ -49,6 +51,7 @@ class OrderUpdate(APIView):
 
 
 class OrderDelete(APIView):
+
     # permission_classes = [AllowAny]
 
     def post(self , request , format='json'):
@@ -72,25 +75,25 @@ class OrderDelete(APIView):
 
 
 class OrderItemCreate(APIView):
+
     # permission_classes = [AllowAny]
 
     def post(self , request , format='json'):
         order_query = Order.objects.filter(user=request.user , checkout=False)
         if len(order_query) > 1:
             return Response('there is still another open order' , status=status.HTTP_409_CONFLICT)
-        order = order_query.first()
-        product_id = request.data['item']
-        product = Product.objects.filter(pk=product_id).first()
-        quantity = request.data['quantity']
 
         serializer = OrderItemSerializer(data=request.data)
         if serializer.is_valid():
+            order = order_query.first()
+            product_id = request.data['item']
+            product = Product.objects.filter(pk=product_id).first()
+            quantity = request.data['quantity']
             # order_item = OrderItem.objects.first(order=order) or None
             # order_item = serializer.save(order=order)
             order_item , created = OrderItem.objects.update_or_create(order=order ,
                                                                       item=product ,
                                                                       defaults={"quantity": quantity})
-            print(f'created: {created}')
             if created:
                 json = serializer.data
                 return Response(json , status=status.HTTP_201_CREATED)

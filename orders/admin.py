@@ -20,7 +20,7 @@ class OrderItemInline(admin.TabularInline):
 
     extra = 0
     verbose_name = None
-    readonly_fields = ['item' , 'quantity']
+    readonly_fields = ['item' , 'quantity' , 'date_created' , 'date_modified']
 
     def has_add_permission(self , request , obj):
         return False

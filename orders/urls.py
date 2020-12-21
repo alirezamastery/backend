@@ -13,5 +13,5 @@ urlpatterns = [
     path('create/' , OrderCreate.as_view() , name='order-create') ,
     path('update/' , OrderUpdate.as_view() , name='order-update') ,
     path('delete/' , OrderDelete.as_view() , name='order-delete') ,
-    path('create/order-item/' , OrderItemCreate.as_view() , name='order-item-create')
+    path('create-item/' , OrderItemCreate.as_view() , name='order-create-item')
 ]
