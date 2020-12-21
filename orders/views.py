@@ -7,7 +7,7 @@ from rest_framework.permissions import IsAuthenticated , AllowAny
 from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from .serializers import OrderSerializer , OrderItemSerializer
-from .models import Order
+from .models import Order , OrderItem
 
 
 class OrderCreate(APIView):
@@ -82,6 +82,7 @@ class OrderItemCreate(APIView):
 
         serializer = OrderItemSerializer(data=request.data)
         if serializer.is_valid():
+            order_item_query = OrderItem.objects.first(order=order)
             order_item = serializer.save(order=order)
             if order_item:
                 json = serializer.data
