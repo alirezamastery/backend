@@ -32,7 +32,7 @@ class Product(models.Model):
             # Newly created object, so set slug
             slug_str = f'{self.name}'
             unique_slugify(self , slug_str)  # this snippet creates unique slugs
-            # self.slug = slugify(self.name , allow_unicode=True) # this may not be unique
+            # self.slug = slugify(self.name , allow_unicode=True) # this slug may not be unique
 
         super().save(*args , **kwargs)
 

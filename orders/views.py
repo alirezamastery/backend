@@ -8,6 +8,7 @@ from rest_framework_simplejwt.authentication import JWTTokenUserAuthentication
 
 from .serializers import OrderSerializer , OrderItemSerializer
 from .models import Order , OrderItem
+from products.models import Product
 
 
 class OrderCreate(APIView):
@@ -77,16 +78,25 @@ class OrderItemCreate(APIView):
         order_query = Order.objects.filter(user=request.user , checkout=False)
         if len(order_query) > 1:
             return Response('there is still another open order' , status=status.HTTP_400_BAD_REQUEST)
-        order = order_query[0]
+        order = order_query.first()
         product_id = request.data['item']
+        product = Product.objects.filter(pk=product_id).first()
+        print('order:' , order , 'product:' , product)
+        quantity = request.data['quantity']
 
         serializer = OrderItemSerializer(data=request.data)
         if serializer.is_valid():
-            order_item_query = OrderItem.objects.first(order=order)
-            order_item = serializer.save(order=order)
-            if order_item:
+            # order_item = OrderItem.objects.first(order=order) or None
+            # order_item = serializer.save(order=order)
+            order_item , created = OrderItem.objects.update_or_create(order=order ,
+                                                                      item=product ,
+                                                                      defaults={"quantity": quantity})
+            print(f'created: {created}')
+            if created:
                 json = serializer.data
                 return Response(json , status=status.HTTP_201_CREATED)
+            else:
+                return Response(f'updated order item quantity to: {quantity}' , status=status.HTTP_202_ACCEPTED)
 
         return Response(serializer.errors , status=status.HTTP_400_BAD_REQUEST)
 
