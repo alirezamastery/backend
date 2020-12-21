@@ -89,8 +89,6 @@ class OrderItemCreate(APIView):
             product_id = request.data['item']
             product = Product.objects.filter(pk=product_id).first()
             quantity = request.data['quantity']
-            # order_item = OrderItem.objects.first(order=order) or None
-            # order_item = serializer.save(order=order)
             order_item , created = OrderItem.objects.update_or_create(order=order ,
                                                                       item=product ,
                                                                       defaults={"quantity": quantity})

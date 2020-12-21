@@ -13,8 +13,10 @@ User = get_user_model()
 class OrderTestCase(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(username='tester' , password='tt123456' , phone_number='09121115522')
-        self.product1 = Product.objects.create(name='car' , price=10)
+        self.user1 = User.objects.create_user(username='tester1' , password='tt123456' , phone_number='09121115522')
+        self.user2 = User.objects.create_user(username='tester2' , password='mm321654' , phone_number='09121115523')
+        self.product1 = Product.objects.create(name='product1' , price=10)
+        self.product2 = Product.objects.create(name='product2' , price=20)
 
     @staticmethod
     def get_client():
@@ -25,22 +27,24 @@ class OrderTestCase(TestCase):
     def test_order_item_create(self):
         client = self.get_client()
 
-        # Login:
+        # Login tester1:
         response = client.post('/api/token/' ,
                                data={
-                                   'username': 'tester' ,
+                                   'username': 'tester1' ,
                                    'password': 'tt123456'
                                })
         self.assertEqual(response.status_code , 200)
         self.assertTrue('access' in response.data)
+        token = response.data['access']
 
         # Create Order:
-        token = response.data['access']
         client.credentials(HTTP_AUTHORIZATION=f'JWT {token}')
-        order_creation_response = client.post('/api/orders/create/' , data=None)
-        self.assertEqual(order_creation_response.status_code , 201)
-        order = Order.objects.filter(pk=1).first()
-        self.assertEqual(order.user , self.user)
+        order_create_response = client.post('/api/orders/create/' , data=None)
+        self.assertEqual(order_create_response.status_code , 201)
+        order_qs = Order.objects.all()
+        self.assertEqual(order_qs.count() , 1)
+        order = order_qs.first()
+        self.assertEqual(order.user , self.user1)
 
         # Create OrderItem:
         order_item_create_response = client.post('/api/orders/create-item/' ,
@@ -63,5 +67,45 @@ class OrderTestCase(TestCase):
                                                  format='json'
                                                  )
         self.assertEqual(order_item_update_response.status_code , 202)
-        order_item = OrderItem.objects.filter(item=1).first()
+        order_item = OrderItem.objects.filter(order=order , item=1).first()
         self.assertEqual(order_item.quantity , 3)
+
+        # Create another OrderItem:
+        order_item_create_response = client.post('/api/orders/create-item/' ,
+                                                 data={
+                                                     "item":     "2" ,
+                                                     "quantity": "5"
+                                                 } ,
+                                                 format='json'
+                                                 )
+        self.assertEqual(order_item_create_response.status_code , 201)
+        order_item = OrderItem.objects.filter(order=order , item=2).first()
+        self.assertEqual(order_item.item.price , 20)
+
+        # Create another Order tester1:
+        token = response.data['access']
+        client.credentials(HTTP_AUTHORIZATION=f'JWT {token}')
+        order_create_duplicate_response = client.post('/api/orders/create/' , data=None)
+        self.assertEqual(order_create_duplicate_response.status_code , 400)
+        order_qs = Order.objects.all()
+        self.assertEqual(order_qs.count() , 1)
+
+        # Login user2:
+        login_user2_response = client.post('/api/token/' ,
+                               data={
+                                   'username': 'tester2' ,
+                                   'password': 'mm321654'
+                               })
+        self.assertEqual(login_user2_response.status_code , 200)
+        self.assertTrue('access' in login_user2_response.data)
+        token_user2 = login_user2_response.data['access']
+
+        # Create Order user2:
+        client.credentials(HTTP_AUTHORIZATION=f'JWT {token_user2}')
+        order_create_user2_response = client.post('/api/orders/create/' , data=None)
+        self.assertEqual(order_create_user2_response.status_code , 201)
+        order_qs = Order.objects.all()
+        self.assertEqual(order_qs.count() , 2)
+        order_user2 = order_qs.filter(pk=2).first()
+        self.assertEqual(order_user2.user , self.user2)
+
