@@ -9,7 +9,7 @@ from .serializers import MyTokenObtainPairView
 
 urlpatterns = [
     path('admin/' , admin.site.urls) ,
-    path('api/products/' , include('products.api.urls')) ,
+    path('api/products/' , include('products.urls')) ,
     # path('' , include('users.urls')) ,
     path('api/snippets/' , include('snippets.urls')) ,
     path('api/user/' , include('users.urls')) ,
