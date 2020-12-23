@@ -19,7 +19,6 @@ class CustomPagination(pagination.PageNumberPagination):
         form = dict()
         fields = Sample._meta.get_fields()
         for f in fields:
-            print('f.name' ,f.name)
             if f.get_internal_type() != 'AutoField':
                 form[f.name] = f.get_internal_type()
 

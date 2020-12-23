@@ -11,22 +11,24 @@ class CustomListSerializer(serializers.ListSerializer):
     def to_representation(self , data):  # we can inject the payload here or in the pagination class
         ret = super().to_representation(data)
 
-        form = dict()
-        fields = Sample._meta.get_fields()
-        for f in fields:
-            print('type:' , Sample._meta.get_field(f.name).get_internal_type())
-            print(f.get_internal_type())
-            form[f.name] = f.get_internal_type()
-
-        ret.insert(0 , form)
+        # form = dict()
+        # fields = Sample._meta.get_fields()
+        # for f in fields:
+        #     print('type:' , Sample._meta.get_field(f.name).get_internal_type())
+        #     print(f.get_internal_type())
+        #     form[f.name] = f.get_internal_type()
+        #
+        # ret.insert(0 , form)
 
         return ret
 
 
-class SampleSerializer(serializers.ModelSerializer):
+class SampleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sample
-        fields = ['name' , 'filter_fields']
+        fields = ['name' ,
+                  # 'filter_fields'  # the method we added
+                  ]
         list_serializer_class = CustomListSerializer
 
     # def to_representation(self, instance):
