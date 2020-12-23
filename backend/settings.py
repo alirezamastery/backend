@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     # if you want your signals to work add your app like this: yourapp.apps.YourappConfig:
     'profiles.apps.ProfilesConfig' ,
     'orders' ,
+    'json_inject' ,
 ]
 
 MIDDLEWARE = [

@@ -13,6 +13,7 @@ class ProductSerializer(serializers.HyperlinkedModelSerializer):
                   'description' ,
                   'inventory' ,
                   'featured' ,
+                  'has_inventory',
                   ]
         extra_kwargs = {
             'url': {'view_name': 'contents-detail'}
