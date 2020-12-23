@@ -8,7 +8,7 @@ class CustomListSerializer(serializers.ListSerializer):
     def update(self , instance , validated_data):
         pass
 
-    def to_representation(self, data):
+    def to_representation(self , data):  # we can inject the payload here or in the pagination class
         ret = super().to_representation(data)
 
         form = dict()
@@ -18,7 +18,7 @@ class CustomListSerializer(serializers.ListSerializer):
             print(f.get_internal_type())
             form[f.name] = f.get_internal_type()
 
-        ret.insert(0,form)
+        ret.insert(0 , form)
 
         return ret
 

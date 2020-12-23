@@ -5,11 +5,13 @@ from rest_framework.decorators import api_view
 
 from .models import Sample
 from .serializers import SampleSerializer
+from .pagination import CustomPagination
 
 
 class SampleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Sample.objects.all()
     serializer_class = SampleSerializer
+    pagination_class = CustomPagination
 
 
 @api_view(['GET'])

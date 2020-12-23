@@ -42,7 +42,7 @@ class Product(models.Model):
             img.save(self.image.path)
 
     def has_inventory(self):
-        return self.inventory > 0  # True or False
+        return self.inventory > 0
 
 
 class RatingModel(models.Model):
