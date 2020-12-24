@@ -5,8 +5,11 @@ from rest_framework.decorators import api_view
 
 from .models import Sample
 from .serializers import SampleSerializer
-from .pagination import CustomPagination
+from .pagination import CustomPaginationBase
 
+
+class CustomPagination(CustomPaginationBase):
+    model_class = Sample
 
 class SampleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Sample.objects.all().order_by('id')

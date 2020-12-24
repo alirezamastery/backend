@@ -1,8 +1,19 @@
 from django.db import models
+from django.core.exceptions import ValidationError
+from django.utils.translation import ugettext_lazy as _
+
+
+def validate_phone_number(value):
+    if value < 0:
+        raise ValidationError(
+                _('%(value)s is not acceptable as inventory value') ,
+                params={'value': value} ,
+        )
 
 
 class Sample(models.Model):
     name = models.CharField(default='' , max_length=50 , blank=False)
+    inventory = models.IntegerField(default=0 , validators=[validate_phone_number])
 
     def __str__(self):
         return f'{self.name}'
