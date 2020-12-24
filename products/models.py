@@ -7,8 +7,8 @@ from PIL import Image
 
 from assets.unique_slug import unique_slugify
 
-User = settings.AUTH_USER_MODEL
 
+User = settings.AUTH_USER_MODEL
 
 class Product(models.Model):
     name = models.CharField(max_length=300 , unique=True)
