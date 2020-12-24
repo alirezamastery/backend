@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import Sample
+from .models import Category , Sample
 
 
 class CustomListSerializer(serializers.ListSerializer):
@@ -21,6 +21,13 @@ class CustomListSerializer(serializers.ListSerializer):
         # ret.insert(0 , form)
 
         return ret
+
+
+class CategorySerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Category
+        ordering = ['-id']
+        fields = ['name' , 'get_children']
 
 
 class SampleSerializer(serializers.HyperlinkedModelSerializer):

@@ -12,7 +12,8 @@ def validate_inventory_number(value):
 
 class Category(models.Model):
     name = models.CharField(max_length=100 , blank=False)
-    parent = models.ForeignKey('Category' , blank=True , null=True , related_name='children' , on_delete=models.RESTRICT)
+    parent = models.ForeignKey('Category' , blank=True , null=True , related_name='children' ,
+                               on_delete=models.RESTRICT)
     slug = models.SlugField(allow_unicode=True , unique=True , editable=True)
 
     class Meta:
@@ -34,10 +35,20 @@ class Category(models.Model):
 
         super().save(*args , **kwargs)
 
+    def get_children(self):
+        qs = self.children.all()
+        if qs.count() > 0:
+            names = [obj.name for obj in qs]
+        else:
+            names = 'NO CHILD'
+        return names
+
 
 class Sample(models.Model):
-    category = models.ForeignKey(Category , on_delete=models.CASCADE)
+    category = models.ForeignKey(Category , on_delete=models.CASCADE , related_name='samples')
     name = models.CharField(default='' , max_length=50 , blank=False)
+    image = models.ImageField(default='default.jpg' , upload_to='product_pics')
+    created_date = models.DateTimeField(auto_now_add=True)
     inventory = models.IntegerField(default=0 , validators=[validate_inventory_number])
     slug = models.SlugField(allow_unicode=True , unique=True , editable=True)
 
@@ -56,6 +67,17 @@ class Sample(models.Model):
         return self.inventory > 0
 
     in_stock.filterable = True
+    in_stock.boolean = True
+
+    def category_tree(self):
+        full_path = []
+        k = self.category
+        while k is not None:
+            full_path.append(k.name)
+            k = k.parent
+        return ' | '.join(full_path[::-1])
+
+
 
     # @staticmethod
     # def filter_fields():  # we can add a method that takes no args to serializer

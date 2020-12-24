@@ -6,6 +6,7 @@ from .models import Category , Sample
 class SampleAdmin(admin.ModelAdmin):
     model = Sample
     readonly_fields = ['slug']
+    list_display = ('name' , 'category_tree' , 'in_stock' , 'inventory' , 'created_date' , 'pk')
 
 
 class SampleAdminInline(admin.TabularInline):
