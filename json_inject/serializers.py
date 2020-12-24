@@ -26,10 +26,11 @@ class CustomListSerializer(serializers.ListSerializer):
 class SampleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sample
+        ordering = ['-id']
         fields = ['name' ,
                   # 'filter_fields'  # the method we added
                   ]
-        list_serializer_class = CustomListSerializer
+        # list_serializer_class = CustomListSerializer
 
     # def to_representation(self, instance):
     #     ret = super().to_representation(instance)

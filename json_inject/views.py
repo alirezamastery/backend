@@ -9,9 +9,10 @@ from .pagination import CustomPagination
 
 
 class SampleViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Sample.objects.all()
+    queryset = Sample.objects.all().order_by('id')
     serializer_class = SampleSerializer
     pagination_class = CustomPagination
+    ordering = ['id']
 
 
 @api_view(['GET'])
