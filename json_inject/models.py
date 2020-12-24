@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
 
 
-def validate_phone_number(value):
+def validate_inventory_number(value):
     if value < 0:
         raise ValidationError(
                 _('%(value)s is not acceptable as inventory value') ,
@@ -13,10 +13,15 @@ def validate_phone_number(value):
 
 class Sample(models.Model):
     name = models.CharField(default='' , max_length=50 , blank=False)
-    inventory = models.IntegerField(default=0 , validators=[validate_phone_number])
+    inventory = models.IntegerField(default=0 , validators=[validate_inventory_number])
 
     def __str__(self):
         return f'{self.name}'
+
+    def in_stock(self):
+        return self.inventory > 0
+
+    in_stock.filterable = True
 
     # @staticmethod
     # def filter_fields():  # we can add a method that takes no args to serializer

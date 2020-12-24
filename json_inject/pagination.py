@@ -49,7 +49,12 @@ class CustomPaginationBase(pagination.PageNumberPagination):
             form[field.name] = field.get_internal_type()
             filters.append(field.get_internal_type())
 
-        # filters = set(filters)
+        for attr in self.model_class.__dict__:
+            if hasattr(self.model_class.__dict__[attr] , 'filterable') and \
+                    getattr(self.model_class.__dict__[attr] , 'filterable'):
+                filters.append(attr)
+
+        filters = set(filters)
         # print(filters)
 
-        return form
+        return filters

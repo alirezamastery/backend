@@ -27,7 +27,7 @@ class SampleSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Sample
         ordering = ['-id']
-        fields = ['name' ,
+        fields = ['name' , 'in_stock' ,
                   # 'filter_fields'  # the method we added
                   ]
         # list_serializer_class = CustomListSerializer
