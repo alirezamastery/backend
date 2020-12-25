@@ -11,6 +11,6 @@ urlpatterns = router.urls
 # app_name = 'inject'
 #
 urlpatterns += [
-    path('cpu/' , CpuListView.as_view()) ,
+    # path('cpu/' , CpuListView.as_view()) ,
     # path('<int:pk>/' , sample_detail_view)
 ]

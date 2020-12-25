@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'corsheaders' ,
     'rest_framework_simplejwt.token_blacklist' ,
     'webpack_loader' ,
+    'ckeditor',
     # internal
     'products' ,
     'snippets' ,
@@ -132,9 +133,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    BASE_DIR / "static" ,
-]
+STATIC_ROOT = os.path.join(BASE_DIR , 'static')
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static" ,
+# ]
 MEDIA_ROOT = os.path.join(BASE_DIR , 'media')
 MEDIA_URL = '/media/'
 
@@ -205,3 +207,20 @@ WEBPACK_LOADER = {
         'STATS_FILE':      os.path.join(BASE_DIR , 'webpack-stats.json')
     }
 }
+
+####################################
+##  CKEDITOR CONFIGURATION ##
+####################################
+
+CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
+
+CKEDITOR_UPLOAD_PATH = 'media/images/'
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': None ,
+    } ,
+}
+
+###################################

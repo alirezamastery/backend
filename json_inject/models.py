@@ -1,8 +1,9 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import ugettext_lazy as _
+from django.utils.html import mark_safe
 from assets.unique_slug import unique_slugify
-
+from ckeditor_uploader.fields import RichTextUploadingField
 
 def validate_inventory_number(value):
     if value < 0:
@@ -40,7 +41,7 @@ class Category(models.Model):
         if qs.count() > 0:
             names = [obj.name for obj in qs]
         else:
-            names = 'NO CHILD'
+            names = False
         return names
 
 
@@ -48,6 +49,7 @@ class Sample(models.Model):
     category = models.ForeignKey(Category , on_delete=models.CASCADE , related_name='samples')
     name = models.CharField(default='' , max_length=50 , blank=False)
     image = models.ImageField(default='default.jpg' , upload_to='product_pics')
+    description = RichTextUploadingField(default='')
     created_date = models.DateTimeField(auto_now_add=True)
     inventory = models.IntegerField(default=0 , validators=[validate_inventory_number])
     slug = models.SlugField(allow_unicode=True , unique=True , editable=True)
@@ -77,7 +79,10 @@ class Sample(models.Model):
             k = k.parent
         return ' | '.join(full_path[::-1])
 
+    def image_tag(self):
+        return mark_safe(f'<img src="/media/{self.image}" width="100" height="100" />')
 
+    image_tag.short_description = 'Image'
 
     # @staticmethod
     # def filter_fields():  # we can add a method that takes no args to serializer

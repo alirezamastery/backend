@@ -43,18 +43,17 @@ class CpuListView(generics.ListAPIView):
     # pagination_class = CustomPagination
 
     def get_queryset(self):
-        category = Category.objects.get(name='AMD')
-        queryset = category.sample_set.all()
-        return queryset
+        category = Category.objects.get(name='CPU')
+        total = list()
+        if category.get_children():
+            for cat in category.get_children():
+                qs = Category.objects.get(name=cat)
+                total.append(qs.objects.all())
+
+        print(total)
+        return total
 
 
-@api_view(['GET'])
-def sample_list_view(request , *args , **kwargs):
-    qs = Sample.objects.all()
-    if not qs.exists():
-        return Response({} , status=404)
-    serializer = SampleSerializer(qs , many=True)
-    return Response(serializer.data , status=200)
 
 
 @api_view(['GET'])
