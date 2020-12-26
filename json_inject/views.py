@@ -1,16 +1,16 @@
 from django.shortcuts import render , get_object_or_404
-from rest_framework import generics
+from rest_framework import viewsets , generics
 from rest_framework.response import Response
-from rest_framework import viewsets
 from rest_framework.decorators import api_view
 
-from .models import Category , Sample
-from .serializers import CategorySerializer , SampleSerializer
+from .models import Category , Sample , Genre , Band
+from .serializers import CategorySerializer , SampleSerializer , GenreSerializer , BandSerializer
 from .pagination import CustomPaginationBase
 
 
 class CategoryPagination(CustomPaginationBase):
     model_class = Category
+
 
 class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Category.objects.all().order_by('id')
@@ -22,25 +22,16 @@ class CategoryViewSet(viewsets.ReadOnlyModelViewSet):
 class SamplePagination(CustomPaginationBase):
     model_class = Sample
 
+
 class SampleViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Sample.objects.all().order_by('id')
     serializer_class = SampleSerializer
     pagination_class = SamplePagination
     ordering = ['id']
 
+
 class CpuListView(generics.ListAPIView):
-
     serializer_class = SampleSerializer
-    # filter_backends = [
-    #     SearchFilter ,
-    #     DjangoFilterBackend ,
-    #     OrderingFilter ,
-    # ]
-    # search_fields = ['name']
-    # ordering_fields = ['created_date' , 'price']
-    # ordering = ['-created_date']
-
-    # pagination_class = CustomPagination
 
     def get_queryset(self):
         category = Category.objects.get(name='CPU')
@@ -54,6 +45,29 @@ class CpuListView(generics.ListAPIView):
         return total
 
 
+class GenreViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = GenreSerializer
+    queryset = Genre.objects.filter(level=0).order_by('id')
+
+
+class BandView(generics.RetrieveAPIView):
+    queryset = Band.objects.all()
+    serializer_class = BandSerializer
+
+    def get_object(self):
+        print('in get_object')
+        rs = self.kwargs
+        for k in rs:
+            print(f'{k:<20} | {self.kwargs.get(k)}')
+        parent1 = Genre.objects.get(name=self.kwargs.get('slug1'))
+        print(parent1.level)
+        parent2 = Genre.objects.get(name=self.kwargs.get('slug2'))
+        print(parent2)
+        return Band.objects.get(pk=self.kwargs.get('pk'))
+
+
+# @api_view(['GET'])
+# def band_list_view(request , slug,id)
 
 
 @api_view(['GET'])

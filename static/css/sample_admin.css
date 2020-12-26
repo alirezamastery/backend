@@ -1,6 +1,6 @@
 #result_list td,
 #result_list th {
     margin-top: 500px;
-    text-align: center;
-    vertical-align: middle;
+    text-align: center!important;
+    vertical-align: middle!important;
 }

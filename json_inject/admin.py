@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.utils.html import format_html
+from mptt.admin import DraggableMPTTAdmin
 
-from .models import Category , Sample
+from .models import Category , Sample , Genre , Band
 
 
 class SampleAdmin(admin.ModelAdmin):
@@ -31,5 +32,19 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 
+class GenreAdmin(DraggableMPTTAdmin):
+    mptt_indent_field = "name"
+    list_display = ('tree_actions' , 'indented_title' , 'id'
+                    )
+    list_display_links = ('indented_title' ,)
+
+
+class BandAdmin(admin.ModelAdmin):
+    fields = ['name' , 'genre']
+    list_display = ['name' , 'id']
+
+
 admin.site.register(Category , CategoryAdmin)
 admin.site.register(Sample , SampleAdmin)
+admin.site.register(Genre , GenreAdmin)
+admin.site.register(Band , BandAdmin)

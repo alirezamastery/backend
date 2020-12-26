@@ -4,6 +4,8 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.html import mark_safe
 from assets.unique_slug import unique_slugify
 from ckeditor_uploader.fields import RichTextUploadingField
+from mptt.models import MPTTModel , TreeForeignKey
+
 
 def validate_inventory_number(value):
     if value < 0:
@@ -96,3 +98,25 @@ class Sample(models.Model):
     #     # for f in fields[0].__dict__:
     #     #     print(f'{f:<20} | {fields[0].__dict__[f]}')
     #     return form
+
+
+class Genre(MPTTModel):
+    name = models.CharField(max_length=100 , unique=True)
+    parent = TreeForeignKey('self' , on_delete=models.CASCADE , null=True , blank=True , related_name='children')
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    def __str__(self):
+        return f'{self.name}'
+
+
+class Band(models.Model):
+    name = models.CharField(max_length=100 , unique=True)
+    genre = models.ForeignKey(Genre , on_delete=models.CASCADE , blank=False, related_name='leaves')
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
+
+    def __str__(self):
+        return f'{self.name}'
