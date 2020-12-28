@@ -35,7 +35,7 @@ class SampleSerializer(serializers.HyperlinkedModelSerializer):
         model = Sample
         ordering = ['-id']
         fields = ['name' , 'in_stock' ,
-                  # 'filter_fields'  # the method we added
+                  # 'filter_fields'  # the method we added to the Sample model
                   ]
         # list_serializer_class = CustomListSerializer    # use CustomListSerializer to inject a payload
 
@@ -47,7 +47,7 @@ class SampleSerializer(serializers.HyperlinkedModelSerializer):
 
 
 # https://stackoverflow.com/questions/13376894/django-rest-framework-nested-self-referential-objects
-class GenreSerializer(serializers.ModelSerializer):
+class GenreSerializerRecursive(serializers.HyperlinkedModelSerializer):
     subcategories = serializers.SerializerMethodField(read_only=True , method_name="get_child_categories")
 
     class Meta:
@@ -56,6 +56,7 @@ class GenreSerializer(serializers.ModelSerializer):
             'name' ,
             'parent_id' ,
             'subcategories' ,
+            'get_filters'
         ]
 
     def get_child_categories(self , obj):
@@ -66,11 +67,20 @@ class GenreSerializer(serializers.ModelSerializer):
         # else:
         #     print('else')
         #     return {}
-        serializer = GenreSerializer(instance=obj.children.all() , many=True)
+        serializer = GenreSerializerRecursive(instance=obj.children.all() , many=True)
         return serializer.data
+
+
+class GenreSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = Genre
+        fields = [
+            'name' ,
+            'get_filters'
+        ]
 
 
 class BandSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Band
-        fields = ['name' , 'genre_id']
+        fields = ['name' , 'genre_id' , 'has_inventory' , 'color']

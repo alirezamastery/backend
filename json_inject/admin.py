@@ -32,15 +32,21 @@ class CategoryAdmin(admin.ModelAdmin):
     readonly_fields = ['slug']
 
 
+class BandInline(admin.TabularInline):
+    class Media:
+        css = {"all": ("css/hide_admin_original.css" ,)}
+    model = Band
+
+
 class GenreAdmin(DraggableMPTTAdmin):
+    inlines = [BandInline]
     mptt_indent_field = "name"
-    list_display = ('tree_actions' , 'indented_title' , 'id'
-                    )
+    list_display = ('tree_actions' , 'indented_title' , 'id')
     list_display_links = ('indented_title' ,)
 
 
 class BandAdmin(admin.ModelAdmin):
-    fields = ['name' , 'genre']
+    # fields = ['name' , 'genre']
     list_display = ['name' , 'id']
 
 

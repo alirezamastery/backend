@@ -8,10 +8,8 @@ from rest_framework import permissions
 from django_filters.rest_framework import DjangoFilterBackend , FilterSet
 from django_filters import rest_framework as filters
 
-from .models import Product
-from .serializers import ProductSerializer
-from .pagination import ListViewPagination , CustomPagination
 
+from .pagination import ListViewPagination , CustomPagination
 from .models import Product
 from .serializers import ProductSerializer
 

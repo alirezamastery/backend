@@ -4,23 +4,23 @@ from django.utils.translation import ugettext_lazy as _
 from django.utils.html import mark_safe
 from assets.unique_slug import unique_slugify
 from ckeditor_uploader.fields import RichTextUploadingField
-from mptt.models import MPTTModel , TreeForeignKey
+from mptt.models import MPTTModel, TreeForeignKey
 
 
 def validate_inventory_number(value):
     if value < 0:
-        raise ValidationError(_('%(value)s is not acceptable as inventory value') ,
-                              params={'value': value} , )
+        raise ValidationError(_('%(value)s is not acceptable as inventory value'),
+                              params={'value': value}, )
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=100 , blank=False)
-    parent = models.ForeignKey('Category' , blank=True , null=True , related_name='children' ,
+    name = models.CharField(max_length=100, blank=False)
+    parent = models.ForeignKey('Category', blank=True, null=True, related_name='children',
                                on_delete=models.RESTRICT)
-    slug = models.SlugField(allow_unicode=True , unique=True , editable=True)
+    slug = models.SlugField(allow_unicode=True, unique=True, editable=True)
 
     class Meta:
-        unique_together = ('slug' , 'parent' ,)
+        unique_together = ('slug', 'parent',)
 
     def __str__(self):
         full_path = [self.name]
@@ -30,13 +30,13 @@ class Category(models.Model):
             k = k.parent
         return ' | '.join(full_path[::-1])
 
-    def save(self , *args , **kwargs):
+    def save(self, *args, **kwargs):
         if not self.id:
             # Newly created object, so set slug
             slug_str = f'{self.name}'
-            unique_slugify(self , slug_str)  # this snippet creates unique slugs
+            unique_slugify(self, slug_str)  # this snippet creates unique slugs
 
-        super().save(*args , **kwargs)
+        super().save(*args, **kwargs)
 
     def get_children(self):
         qs = self.children.all()
@@ -48,24 +48,24 @@ class Category(models.Model):
 
 
 class Sample(models.Model):
-    category = models.ForeignKey(Category , on_delete=models.CASCADE , related_name='samples')
-    name = models.CharField(default='' , max_length=50 , blank=False)
-    image = models.ImageField(default='default.jpg' , upload_to='product_pics')
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='samples')
+    name = models.CharField(default='', max_length=50, blank=False)
+    image = models.ImageField(default='default.jpg', upload_to='product_pics')
     description = RichTextUploadingField(default='')
     created_date = models.DateTimeField(auto_now_add=True)
-    inventory = models.IntegerField(default=0 , validators=[validate_inventory_number])
-    slug = models.SlugField(allow_unicode=True , unique=True , editable=True)
+    inventory = models.IntegerField(default=0, validators=[validate_inventory_number])
+    slug = models.SlugField(allow_unicode=True, unique=True, editable=True)
 
     def __str__(self):
         return f'{self.name}'
 
-    def save(self , *args , **kwargs):
+    def save(self, *args, **kwargs):
         if not self.id:
             # Newly created object, so set slug
             slug_str = f'{self.name}'
-            unique_slugify(self , slug_str)  # this snippet creates unique slugs
+            unique_slugify(self, slug_str)  # this snippet creates unique slugs
 
-        super().save(*args , **kwargs)
+        super().save(*args, **kwargs)
 
     def in_stock(self):
         return self.inventory > 0
@@ -101,22 +101,53 @@ class Sample(models.Model):
 
 
 class Genre(MPTTModel):
-    name = models.CharField(max_length=100 , unique=True)
-    parent = TreeForeignKey('self' , on_delete=models.CASCADE , null=True , blank=True , related_name='children')
+    COLOR_CHOICES = (
+        ('red', 'Red'),
+        ('green', 'Green'),
+        ('blue', 'Blue'),
+    )
+
+    name = models.CharField(max_length=100, unique=True)
+    parent = TreeForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+
+    # color = models.CharField(max_length=20, choices=COLOR_CHOICES, blank=False)
 
     class MPTTMeta:
         order_insertion_by = ['name']
 
     def __str__(self):
         return f'{self.name}'
+
+    def get_filters(self):
+        if self.level > 0:
+            return
+        filters = {
+            'price':         {'type': 'range'},
+            'name':          {'type': 'text'},
+            'has_inventory': {'type': 'boolean'},
+            'color':         {'type': 'choices', 'choices': ['blue', 'green', 'blue']}
+        }
+        return filters
 
 
 class Band(models.Model):
-    name = models.CharField(max_length=100 , unique=True)
-    genre = models.ForeignKey(Genre , on_delete=models.CASCADE , blank=False, related_name='leaves')
-
-    class MPTTMeta:
-        order_insertion_by = ['name']
+    COLOR_CHOICES = (
+        ('red', 'Red'),
+        ('green', 'Green'),
+        ('blue', 'Blue'),
+    )
+    BRANDS = (
+        ('asus', 'Asus'),
+        ('dell', 'Dell'),
+    )
+    name = models.CharField(max_length=100, unique=True)
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, blank=False, related_name='leaves')
+    brand = models.CharField(max_length=100, choices=BRANDS, blank=False)
+    inventory = models.IntegerField(default=0)
+    color = models.CharField(max_length=20, choices=COLOR_CHOICES, blank=False)
 
     def __str__(self):
         return f'{self.name}'
+
+    def has_inventory(self):
+        return self.inventory > 0
