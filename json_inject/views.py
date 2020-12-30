@@ -74,12 +74,39 @@ class GenreRoot(generics.ListAPIView):
     serializer_class = GenreSerializerRecursive
 
 
+class MyBackend(DjangoFilterBackend):
+
+    def get_schema_operation_parameters(self, view):
+        parameters = super().get_schema_operation_parameters(view)
+
+        for parameter in parameters:  # or you can directly use parameter['in'] == 'query' in the frontend!
+            if parameter['in'] == 'query':
+                parameter['filterable'] = True
+            else:
+                parameter['filterable'] = False
+
+        return parameters
+
+
 class BandFilter(FilterSet):
-    in_stock = djangofilters_filters.BooleanFilter(field_name="inventory", method='is_in_stock')
+    in_stock = djangofilters_filters.BooleanFilter(field_name='inventory', method='is_in_stock', label='filter')
+    brand = djangofilters_filters.BooleanFilter(field_name='brand', label='filter')
 
     class Meta:
         model = Band
-        fields = ['genre', 'color', 'brand']
+        fields = ['genre', 'color']
+
+    def __new__(cls, *args, **kwargs):  # messing with filters creation
+        new_class = super().__new__(cls)
+        # filters = new_class.base_filters
+        # print(filters['genre'].label)
+        # filters['genre'].label = 'oooooooooooooo' # if you request api and then request schema it works otherwise no
+        return new_class
+
+    def __init__(self, *args, **kwargs):  # messing with filters creation some more
+        super().__init__(*args, **kwargs)
+        # self.filters['genre'].label = 'sdsssssssssssssssssss'
+        print(self.filters['genre'].label)
 
     def is_in_stock(self, queryset, name, value):  # boolean True is 1 so it filters "inventory >= 1" , kind of a hack!!
         return queryset.filter(inventory__gte=value)
@@ -88,7 +115,7 @@ class BandFilter(FilterSet):
 class BandListView(generics.ListAPIView):
     # queryset = Band.objects.all()
     serializer_class = BandSerializer
-    filter_backends = [DjangoFilterBackend,
+    filter_backends = [MyBackend,
                        filters.OrderingFilter,  # TODO only order based on certain fields
                        filters.SearchFilter]
     # filterset_fields = ['genre', 'color', 'brand']
@@ -96,6 +123,9 @@ class BandListView(generics.ListAPIView):
     search_fields = ['name']
 
     def get_queryset(self):
+        if self.kwargs.get('slug') is None:  # for schema compatibility
+            return Band.objects.none()
+
         parent0 = Genre.objects.get(name=self.kwargs.get('slug'))
         descendants = parent0.get_descendant_count()
         search = self.request.query_params.get('search', None)
@@ -108,12 +138,8 @@ class BandListView(generics.ListAPIView):
             qs = Band.objects.filter(genre_id__in=IDs)
         else:
             qs = parent0.leaves.all()
+
         return qs
-        # if there is search, handle it
-        # if search:
-        #     return qs.filter(name__contains=search)
-        # else:
-        #     return qs
 
 
 @api_view(['GET'])
