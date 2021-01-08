@@ -7,6 +7,7 @@ from .models import Order , OrderItem
 class OrderItemAdmin(admin.ModelAdmin):
     model = OrderItem
     list_display = ('item' , 'order' , 'quantity')
+    search_fields = ['item__name']
 
     def get_orderer(self , obj):
         return obj.book.author
