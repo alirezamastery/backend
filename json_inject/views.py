@@ -1,4 +1,3 @@
-from django.db.models import QuerySet
 from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, generics
 from rest_framework.response import Response

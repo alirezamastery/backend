@@ -39,12 +39,7 @@ class Category(models.Model):
         super().save(*args, **kwargs)
 
     def get_children(self):
-        qs = self.children.all()
-        if qs.count() > 0:
-            names = [obj.name for obj in qs]
-        else:
-            names = False
-        return names
+        return self.children.all().values('name')
 
 
 class Sample(models.Model):

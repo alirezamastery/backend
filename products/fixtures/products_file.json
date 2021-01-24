@@ -1,0 +1,338 @@
+[
+  {
+    "model": "products.product",
+    "pk": 1,
+    "fields": {
+      "name": "car",
+      "price": 65,
+      "image": "product_pics/1_IQFGXxK.jpg",
+      "description": "old car",
+      "created_date": "2020-11-17 13:59:54.941597",
+      "inventory": 5,
+      "featured": 0,
+      "slug": "car"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 2,
+    "fields": {
+      "name": "bullet earpods",
+      "price": 25,
+      "image": "product_pics/1f507813f3cc86fcc938b0ab1582719a_jmBEsXJ.jpg",
+      "description": "military bullet earpods",
+      "created_date": "2020-11-17 14:00:32.759836",
+      "inventory": 100,
+      "featured": 0,
+      "slug": "bullet-earpods"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 3,
+    "fields": {
+      "name": "دکل برق",
+      "price": 15000,
+      "image": "product_pics/220px-Kerinchi_Pylon_BvNRWnw.jpg",
+      "description": "فشار قوی",
+      "created_date": "2020-11-18 14:41:12.524854",
+      "inventory": 2,
+      "featured": 0,
+      "slug": "دکل-برق"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 4,
+    "fields": {
+      "name": "assassin's creed 2017",
+      "price": 12,
+      "image": "product_pics/Assassins_Creed_Origins_ct1xgt7.ico",
+      "description": "بازی برای شما",
+      "created_date": "2020-11-18 14:41:33.896809",
+      "inventory": 9,
+      "featured": 0,
+      "slug": "assassin-creed-2017"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 5,
+    "fields": {
+      "name": "ماشین دهه 80",
+      "price": 9000,
+      "image": "product_pics/1987_buick_riviera_t_type_lIPW95G.jpg",
+      "description": "کم کارکرد\r\nبدون رنگ",
+      "created_date": "2020-11-18 14:42:10.379221",
+      "inventory": 1,
+      "featured": 0,
+      "slug": "ماشین-دهه-80"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 6,
+    "fields": {
+      "name": "GT 86",
+      "price": 146000000,
+      "image": "product_pics/2017-Subaru-BRZ-JDM-spec-1051-876x535_pTNznUY.jpg",
+      "description": "لازم به معرفی نیست",
+      "created_date": "2020-11-18 14:42:38.352752",
+      "inventory": 5,
+      "featured": 0,
+      "slug": "GT-86"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 7,
+    "fields": {
+      "name": "سوسک کثیف",
+      "price": 1,
+      "image": "product_pics/2970049_167.jpg",
+      "description": ":| این چیه آخه",
+      "created_date": "2020-11-18 14:43:03.810096",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "سوسک-کثیف"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 8,
+    "fields": {
+      "name": "طاق کسری",
+      "price": 10000000,
+      "image": "product_pics/8415938866.jpg",
+      "description": "آثار باستانی",
+      "created_date": "2020-11-18 14:43:33.978656",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "طاق-کسری"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 9,
+    "fields": {
+      "name": "Far Cry 4",
+      "price": 15,
+      "image": "product_pics/far_cry_4_icon_for_obly_tile_by_mbuchwald-d7ign8s.jpg",
+      "description": "GG",
+      "created_date": "2020-11-18 14:43:51.746117",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "Far-Cry-4"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 10,
+    "fields": {
+      "name": "خونه ویلایی",
+      "price": 90000000,
+      "image": "product_pics/bora-bora-hotels-hilton-wallpaper_g4SNf2K.jpg",
+      "description": "خانه های بر آب",
+      "created_date": "2020-11-18 14:44:19.809365",
+      "inventory": 5,
+      "featured": 0,
+      "slug": "خونه-ویلایی"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 11,
+    "fields": {
+      "name": "جنگهای صلیبی",
+      "price": 5,
+      "image": "product_pics/91Y8TTDgKiL._AC_SL1500_edited.jpg",
+      "description": "بازی جنگ های صلیبی",
+      "created_date": "2020-11-22 11:20:38.580016",
+      "inventory": 100,
+      "featured": 0,
+      "slug": "جنگهای-صلیبی"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 12,
+    "fields": {
+      "name": "Battlefield 3",
+      "price": 11,
+      "image": "product_pics/BF3_box_art_edited.png",
+      "description": "Battlefield 3 game",
+      "created_date": "2020-11-22 11:21:13.290253",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "Battlefield-3"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 13,
+    "fields": {
+      "name": "Far Cry 3",
+      "price": 16,
+      "image": "default.jpg",
+      "description": "Far Cry 3 game",
+      "created_date": "2020-11-22 11:21:43.197579",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "Far-Cry-3"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 14,
+    "fields": {
+      "name": "Forest Village",
+      "price": 7,
+      "image": "product_pics/Q-9FirZV.jpg",
+      "description": "Forest Village game",
+      "created_date": "2020-11-22 11:22:04.380303",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "Forest-Village"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 15,
+    "fields": {
+      "name": "Age of Empires",
+      "price": 20,
+      "image": "product_pics/unnamed.png",
+      "description": "Age of Empires game",
+      "created_date": "2020-11-22 11:22:56.677481",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "Age-of-Empires"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 16,
+    "fields": {
+      "name": "IG2",
+      "price": 2,
+      "image": "product_pics/industry_giant_ii_by_griddark-d7ekrzz.png",
+      "description": "IG2 game",
+      "created_date": "2020-11-22 11:23:33.573758",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "IG2"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 17,
+    "fields": {
+      "name": "AC3",
+      "price": 15,
+      "image": "product_pics/ac3_naked_boxshot_tablet_169404_edited.jpg",
+      "description": "AC3 game",
+      "created_date": "2020-11-22 11:23:57.652436",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "AC3"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 18,
+    "fields": {
+      "name": "AC4",
+      "price": 16,
+      "image": "product_pics/ac4bf_nakedbox_tablet_165185_edited.jpg",
+      "description": "AC4 game",
+      "created_date": "2020-11-22 11:24:18.638287",
+      "inventory": 6,
+      "featured": 0,
+      "slug": "AC4"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 19,
+    "fields": {
+      "name": "Assassin's Creed",
+      "price": 10,
+      "image": "product_pics/ubicom-assassins_creed_1-search-gameinfo-boxart-568x698_tablet_278343__edited.jpg",
+      "description": "Assassin's Creed game",
+      "created_date": "2020-11-22 11:24:55.276438",
+      "inventory": 1,
+      "featured": 0,
+      "slug": "Assassin-s-Creed"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 20,
+    "fields": {
+      "name": "Assassin's Creed Unity",
+      "price": 17,
+      "image": "product_pics/acu_nakedbox_tablet_164377_edited.jpg",
+      "description": "Assassin's Creed Unity game",
+      "created_date": "2020-11-22 11:25:41.951093",
+      "inventory": 2,
+      "featured": 0,
+      "slug": "Assassin-s-Creed-Unity"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 21,
+    "fields": {
+      "name": "Tshirt 1",
+      "price": 70,
+      "image": "product_pics/116794730.jpg",
+      "description": "a Tshirt",
+      "created_date": "2020-11-24 08:59:11.637801",
+      "inventory": 5,
+      "featured": 0,
+      "slug": "Tshirt-1"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 22,
+    "fields": {
+      "name": "Tshirt 2",
+      "price": 75,
+      "image": "product_pics/117502502_jnkTCEO.jpg",
+      "description": "Tshirt 2",
+      "created_date": "2020-11-24 08:59:35.802037",
+      "inventory": 0,
+      "featured": 0,
+      "slug": "Tshirt-2"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 23,
+    "fields": {
+      "name": "Tshirt 3",
+      "price": 80,
+      "image": "product_pics/117598013.jpg",
+      "description": "Tshirt 3",
+      "created_date": "2020-11-24 08:59:56.104320",
+      "inventory": 10,
+      "featured": 0,
+      "slug": "Tshirt-3"
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 24,
+    "fields": {
+      "name": "Tshirt 4",
+      "price": 85,
+      "image": "product_pics/119877015.jpg",
+      "description": "Tshirt 4",
+      "created_date": "2020-11-24 09:00:16.022552",
+      "inventory": 20,
+      "featured": 0,
+      "slug": "Tshirt-4"
+    }
+  }
+]
