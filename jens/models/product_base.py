@@ -28,16 +28,16 @@ class ProductBase(models.Model):
     manufacturer = models.CharField(max_length=500)
     image = models.ImageField(default='default.jpg', upload_to='product_pics')
     inventory = models.IntegerField(blank=False, validators=[MinValueValidator(0)])
-    discount = models.DecimalField(max_digits=4, decimal_places=2,
+    discount = models.DecimalField(max_digits=4, decimal_places=2, default=0,
                                    validators=[MinValueValidator(0), MaxValueValidator(100)])
-    description = RichTextUploadingField(default='')
+    description = RichTextUploadingField(default='', blank=True, null=True)
     available = models.BooleanField(default=True)
     slug = models.SlugField(allow_unicode=True, unique=True, editable=True)
 
-    date_create = models.DateTimeField(auto_now_add=True)
+    date_created = models.DateTimeField(auto_now_add=True)
     date_updated = models.DateTimeField(auto_now=True)
 
-    other_images = GenericRelation(ProductImage , related_query_name='other_images')
+    other_images = GenericRelation(ProductImage, related_query_name='other_images')
 
     class Meta:
         abstract = True
@@ -51,9 +51,11 @@ class ProductBase(models.Model):
             slug_str = f'{self.name}'
             unique_slugify(self, slug_str)  # this snippet creates unique slugs
 
+        super().save(*args, **kwargs)
+
         img = Image.open(self.image.path)
-        if img.height > settings.PRODUCT_IMAGE_HEIGHT or settings.PRODUCT_IMAGE_WIDTH > 300:
-            output_size = (300, 300)
+        if img.height > settings.PRODUCT_IMAGE_HEIGHT or img.width > settings.PRODUCT_IMAGE_WIDTH:
+            output_size = (settings.PRODUCT_IMAGE_HEIGHT, settings.PRODUCT_IMAGE_WIDTH)
             img.thumbnail(output_size)
             img.save(self.image.path)
 
@@ -61,3 +63,6 @@ class ProductBase(models.Model):
         return mark_safe(f'<img src="/media/{self.image}" width="100" height="100" />')
 
     image_tag.short_description = 'Image'
+
+    def in_stock(self):
+        return self.inventory > 0

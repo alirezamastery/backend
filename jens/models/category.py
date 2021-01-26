@@ -12,12 +12,10 @@ class Category(MPTTModel):
         order_insertion_by = ['name']
 
     def __str__(self):
-        # print(print(inspect.stack()[1].function))
-        if '__repr__' in inspect.stack()[1].function:
-            return str(self.name)
-        ancestors = self.get_ancestors(include_self=True)
-        ancestors = [ancestor for ancestor in ancestors]
-        print(ancestors)
-
-        # print(' | '.join(str(ancestors)))
+        # full_path = [self.name]
+        # k = self.parent
+        # while k is not None:
+        #     full_path.append(k.name)
+        #     k = k.parent
+        # return ' | '.join(full_path[::-1])
         return str(self.name)
