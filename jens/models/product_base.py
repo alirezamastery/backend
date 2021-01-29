@@ -66,3 +66,5 @@ class ProductBase(models.Model):
 
     def in_stock(self):
         return self.inventory > 0
+    in_stock.boolean = True
+
