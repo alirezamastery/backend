@@ -1,6 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_urls static admin_list %}
-
+{% load jens_extras %}
 {% block extrastyle %}
   {{ block.super }}
   <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}">
@@ -44,30 +44,33 @@
   <div id="content-main">
     <h1>{{ from_me }}</h1>
 
-    <div>
+    <div id="changelist">
       <form method="POST">
         {% csrf_token %}
-        <select name="categories_selector" id="categs">
-          {% if selected_category %}
-            <option value={{ selected_category }}>{{ selected_category }}</option>
-          {% endif %}
-          {% for cat in categories %}
-            <option value={{ cat.name }}>{{ cat.name }}</option>
-          {% endfor %}
-        </select>
-        <button type="submit">select</button>
-      </form>
-      {% if sub_categories %}
-        <form method="POST">
-          {% csrf_token %}
-          <select name="sub_categories" id="sub_categs">
-            {% for sub_cat in sub_categories %}
-              <option value={{ sub_cat.name }}>{{ sub_cat.name }}</option>
+        {% for selectable_category in  selectable_categories %}
+          <select name="category_selector_{{ forloop.counter0 }}" id="categs_{{ forloop.counter0 }}">
+            {% if selectable_category.selected %}
+              <option value={{ selectable_category.selected }}>{{ selectable_category.selected }}</option>
+            {% endif %}
+            {% for cat in selectable_category.options %}
+              <option value={{ cat.name }}>{{ cat.name }}</option>
             {% endfor %}
           </select>
-          <button type="submit">select sub-Category</button>
-        </form>
-      {% endif %}
+        {% endfor %}
+        {% if leaves %}
+          <label for="leaves_selector">Product:
+            <select name="leaves_selector" id="leaves_selector">
+              {% if leaves.selected %}
+                <option value={{ leaves.selected }}>{{ leaves.selected }}</option>
+              {% endif %}
+              {% for product in leaves.options %}
+                <option value={{ product.name }}>{{ product.name }}</option>
+              {% endfor %}
+            </select>
+          </label>
+        {% endif %}
+        <button class="button" type="submit">select</button>
+      </form>
     </div>
 
     <hr>

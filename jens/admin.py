@@ -104,17 +104,55 @@ class ChangerAdmin(admin.ModelAdmin):
         extra_context = extra_context or {}
         extra_context['from_me'] = 'this is it'
 
-        extra_context['categories'] = Category.objects.filter(level=0)
-        extra_context['sub_categories'] = None
-        extra_context['selected_category'] = None
-        print(extra_context['categories'])
+        # extra_context['categories'] = Category.objects.filter(level=0)
+        # extra_context['sub_categories'] = list()
+        extra_context['selectable_categories'] = [None]
+        extra_context['selectable_categories'][0] = {'selected': None,
+                                                     'options':  Category.objects.filter(level=0)
+                                                     }
+        extra_context['leaves'] = None
+
+        print(extra_context['selectable_categories'])
 
         if request.method == 'POST':
-            selected_category = request.POST.get('categories_selector')
-            print(selected_category)
-            extra_context['selected_category'] = selected_category
-
-            extra_context['sub_categories'] = Category.objects.filter(level=1)
+            counter = 0
+            while True:
+                print('-' * 50)
+                selected_category = None
+                try:
+                    selected_category = request.POST.get(f'category_selector_{counter}')
+                    print(counter, selected_category)
+                except:
+                    break
+                extra_context['selectable_categories'][counter]['selected'] = selected_category
+                if selected_category:
+                    selected_category_obj = Category.objects.get(name=selected_category)
+                    children = selected_category_obj.get_children()
+                    print(children)
+                    if not children:
+                        selected_product = None
+                        try:
+                            selected_product = request.POST.get(f'leaves_selector')
+                            print(selected_product)
+                        except:
+                            pass
+                        if selected_product:
+                            extra_context['leaves'] = {'selected': selected_product,
+                                                       'options':  selected_category_obj.products.all()
+                                                       }
+                            break
+                        extra_context['leaves'] = {'selected': None,
+                                                   'options':  selected_category_obj.products.all()
+                                                   }
+                        print('reached to the products')  # insert what you want to do here
+                        break
+                    print('all passed')
+                    extra_context['selectable_categories'].append({'selected': None,
+                                                                   'options':  children
+                                                                   })
+                else:
+                    break
+                counter += 1
 
         return super().changelist_view(request, extra_context)
 
