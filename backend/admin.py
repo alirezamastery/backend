@@ -4,34 +4,33 @@ from django.template.response import TemplateResponse
 from jens.models.category import Category
 
 
+# from jens.management.manager_view import manager_view
+
 class MyAdminSite(admin.AdminSite):
 
     def get_app_list(self, request):
         app_list = super().get_app_list(request)
-        new_app = [
-            {
-                "name":      "My Custom App",
-                "app_label": "my_test_app",
-                # "app_url": "/admin/test_view",
-                # 'has_module_perms': True,
-                "models":    [
-                    {
-                        "name":        "tcptraceroute",
-                        "object_name": "tcptraceroute",
-                        # 'perms': {'add': True, 'change': True, 'delete': True, 'view': True},
-                        "admin_url":   "/admin/test_view",
-                        "add_url":     "/admin/test_view/add/",
-                        "view_only":   True,
-                    }
-                ],
-            }
-        ]
+        new_app = {
+            "name":      "Product Manager",
+            "app_label": "product_manager_app",
+            # "app_url": "/admin/test_view",
+            # 'has_module_perms': True,
+            "models":    [
+                {
+                    "name":        "select product",
+                    "object_name": "select_product",
+                    # 'perms': {'add': True, 'change': True, 'delete': True, 'view': True},
+                    "admin_url":   "/admin/test_view",
+                    # "add_url":     "/admin/test_view/add/",
+                    "view_only":   True,
+                }
+            ],
+        }
+
         # for k,v in app_list[1]['models'][0].items():
         #     print(f'{k:<20} | {v}')
-        print(type(app_list))
-        # app_list.append(new_app)
-        app_list += new_app
-        # app_list.insert(0,new_app)
+
+        app_list.insert(1, new_app)  # adding this after the first app in side bar
 
         return app_list
 
@@ -51,34 +50,43 @@ class MyAdminSite(admin.AdminSite):
                 # 'from_me':'from me',
         )
         context['from_me'] = 'this is it'
-        context['selectable_categories'] = [None, ]
-        context['selectable_categories'][0] = {'selected': None,
-                                               'options':  Category.objects.filter(level=0)
-                                               }
+        context['selectable_categories'] = list()
+        context['selectable_categories'].append({'selected': None,
+                                                 'options':  Category.objects.filter(level=0)
+                                                 })
         context['leaves'] = None
 
         print(context['selectable_categories'])
 
         if request.method == 'POST':
             counter = 0
-            while True:
-                print('-' * 50)
+            while True:  # start going down the category hierarchy
                 selected_category = None
                 try:
                     selected_category = request.POST.get(f'category_selector_{counter}')
-                    print(counter, selected_category)
                 except:
                     break
-                context['selectable_categories'][counter]['selected'] = selected_category
                 if selected_category:
+                    # if the user has selected a category for this level in the category hierarchy,
+                    # get the children of the selected category which will become the options for the next level
+                    context['selectable_categories'][counter]['selected'] = selected_category
+                    # in this section we check if the data in request.POST for this level, is a child of
+                    # the previous category.so if the user changes a selection, all the next 'select' tags
+                    # in the front end will be removed
+                    if counter > 0:
+                        parent = context['selectable_categories'][counter - 1]['selected']
+                        parent_obj = Category.objects.get(name=parent)
+                        parent_options_names = [option.name for option in parent_obj.get_children()]
+                        if selected_category not in parent_options_names:
+                            break
                     selected_category_obj = Category.objects.get(name=selected_category)
                     children = selected_category_obj.get_children()
-                    print(children)
+                    # if the selected category has no children it means we have reached a leaf node and
+                    # should start looking for the products related to this node
                     if not children:
                         selected_product = None
                         try:
                             selected_product = request.POST.get(f'leaves_selector')
-                            print(selected_product)
                         except:
                             pass
                         if selected_product:
@@ -89,13 +97,12 @@ class MyAdminSite(admin.AdminSite):
                         context['leaves'] = {'selected': None,
                                              'options':  selected_category_obj.products.all()
                                              }
-                        print('reached to the products')  # insert what you want to do here
                         break
-                    print('all passed')
                     context['selectable_categories'].append({'selected': None,
                                                              'options':  children
                                                              })
                 else:
                     break
                 counter += 1
+
         return TemplateResponse(request, "admin/test_template.html", context)
