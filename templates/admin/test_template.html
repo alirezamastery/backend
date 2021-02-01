@@ -46,6 +46,7 @@
         {% endfor %}
 
         {% if leaves %}
+          &nbsp;
           <label for="leaves_selector">Product:
             <select name="product_selector" id="product_selector">
               {% for product in leaves.options %}
