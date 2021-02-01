@@ -33,13 +33,13 @@
         {% for selectable_category in  selectable_categories %}
           <select name="category_selector_{{ forloop.counter0 }}"
                   id="categs_{{ forloop.counter0 }}"
-{#                  onchange="this.form.submit()"#}
+                  onchange="this.form.submit()"
           >
             {% for cat in selectable_category.options %}
               {% if selectable_category.selected and cat.name == selectable_category.selected %}
-                <option value={{ cat.name }} selected>{{ cat.name }}</option>
+                <option value={{ cat.pk }} selected>{{ cat }}</option>
               {% else %}
-                <option value={{ cat.name }}>{{ cat.name }}</option>
+                <option value={{ cat.pk }}>{{ cat }}</option>
               {% endif %}
             {% endfor %}
           </select>
@@ -47,12 +47,12 @@
 
         {% if leaves %}
           <label for="leaves_selector">Product:
-            <select name="leaves_selector" id="leaves_selector">
+            <select name="product_selector" id="product_selector">
               {% for product in leaves.options %}
                 {% if leaves.selected and product.name == leaves.selected %}
-                  <option value={{ product.name }} selected>{{ product.name }}</option>
+                  <option value={{ product }} selected>{{ product }}</option>
                 {% else %}
-                  <option value={{ product.name }}>{{ product.name }}</option>
+                  <option value={{ product }}>{{ product }}</option>
                 {% endif %}
               {% endfor %}
             </select>
