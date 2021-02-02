@@ -44,9 +44,9 @@
             >
               {% for category in level.options %}
                 {% if level.selected and category.name == level.selected %}
-                  <option value={{ category.pk }} selected>{{ category }}</option>
+                  <option value={{ category.pk }} selected>{{ category.name }}</option>
                 {% else %}
-                  <option value={{ category.pk }}>{{ category }}</option>
+                  <option value={{ category.pk }}>{{ category.name }}</option>
                 {% endif %}
               {% endfor %}
             </select>
@@ -58,10 +58,11 @@
           <label for="product_selector">Product:
             <select name="product_selector" id="product_selector">
               {% for product in leaf_node.options %}
-                {% if leaf_node.selected and product.name == leaf_node.selected %}
-                  <option value={{ product }} selected>{{ product }}</option>
+                {# selected_pk should be in 'int' format #}
+                {% if leaf_node.selected and product.pk == leaf_node.selected_pk %}
+                  <option value={{ product.pk }} selected>{{ product.name }}</option>
                 {% else %}
-                  <option value={{ product }}>{{ product }}</option>
+                  <option value={{ product.pk }}>{{ product.name }}</option>
                 {% endif %}
               {% endfor %}
             </select>

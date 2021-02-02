@@ -83,29 +83,34 @@ class MyAdminSite(admin.AdminSite):
                     children = category_obj.get_children()
                     # if the selected category has no children, it means we have reached a leaf node and
                     # should start looking for the products related to this node
-                    if not children:
-                        # TODO find a way to get product obj, now we only have a name which is not enough
-                        selected_product = None
+                    if children:
+                        # if the selected category has children, continue going down the category hierarchy
+                        context['levels'].append({'selected':    None,
+                                                  'selected_pk': None,
+                                                  'options':     children
+                                                  })
+                    else:
+                        product_pk = None
                         try:
-                            selected_product = request.POST.get(f'product_selector')
+                            product_pk = request.POST.get(f'product_selector')
                         except:
                             pass
-                        if selected_product:
-                            context['leaf_node'] = {'selected': selected_product,
-                                                    'options':  category_obj.products.all()
+                        if product_pk:
+                            product_obj = category_obj.products.get(pk=product_pk)
+                            context['leaf_node'] = {'selected':    product_obj,
+                                                    'selected_pk': product_obj.pk,
+                                                    'options':     category_obj.products.all()
                                                     }
                             # --- do your thing here ---
-                            break
-                        context['leaf_node'] = {'selected': None,
-                                                'options':  category_obj.products.all()
-                                                }
+                        else:
+                            context['leaf_node'] = {'selected':    None,
+                                                    'selected_pk': None,
+                                                    'options':     category_obj.products.all()
+                                                    }
                         break
-                    # if the selected category has children, continue going down the category hierarchy
-                    context['levels'].append({'selected': None,
-                                              'options':  children
-                                              })
+
                 else:
                     break
                 counter += 1
-
+        print(context['leaf_node'])
         return TemplateResponse(request, "admin/test_template.html", context)
