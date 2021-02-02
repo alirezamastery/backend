@@ -108,9 +108,8 @@ class MyAdminSite(admin.AdminSite):
                                                     'options':     category_obj.products.all()
                                                     }
                         break
-
                 else:
                     break
                 counter += 1
-        print(context['leaf_node'])
+
         return TemplateResponse(request, "admin/test_template.html", context)
