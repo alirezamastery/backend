@@ -55,7 +55,7 @@ class MyAdminSite(admin.AdminSite):
                                   'selected_pk': None,
                                   'options':     Category.objects.filter(level=0)
                                   })
-        context['leaves'] = None
+        context['leaf_node'] = None
         # note that each time a request is sent, we are building the context from zero
         if request.method == 'POST':
             counter = 0
@@ -91,14 +91,14 @@ class MyAdminSite(admin.AdminSite):
                         except:
                             pass
                         if selected_product:
-                            context['leaves'] = {'selected': selected_product,
-                                                 'options':  category_obj.products.all()
-                                                 }
+                            context['leaf_node'] = {'selected': selected_product,
+                                                    'options':  category_obj.products.all()
+                                                    }
                             # --- do your thing here ---
                             break
-                        context['leaves'] = {'selected': None,
-                                             'options':  category_obj.products.all()
-                                             }
+                        context['leaf_node'] = {'selected': None,
+                                                'options':  category_obj.products.all()
+                                                }
                         break
                     # if the selected category has children, continue going down the category hierarchy
                     context['levels'].append({'selected': None,

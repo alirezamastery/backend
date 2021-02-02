@@ -21,6 +21,12 @@
   {% endif %}
 {% endblock %}
 
+<style>
+  .test {
+    background-color: #00cc66;
+  }
+</style>
+
 {# as suggested in the docs we use this block to display our context #}
 {% block content %}
 
@@ -31,26 +37,28 @@
         {% csrf_token %}
 
         {% for level in  levels %}
-          <select name="category_selector_{{ forloop.counter0 }}"
-                  id="categs_{{ forloop.counter0 }}"
-                  onchange="this.form.submit()"
-          >
-            {% for category in level.options %}
-              {% if level.selected and category.name == level.selected %}
-                <option value={{ category.pk }} selected>{{ category }}</option>
-              {% else %}
-                <option value={{ category.pk }}>{{ category }}</option>
-              {% endif %}
-            {% endfor %}
-          </select>
+          <label for="categs_{{ forloop.counter0 }}">
+            <select name="category_selector_{{ forloop.counter0 }}"
+                    id="categs_{{ forloop.counter0 }}"
+                    onchange="this.form.submit()"
+            >
+              {% for category in level.options %}
+                {% if level.selected and category.name == level.selected %}
+                  <option value={{ category.pk }} selected>{{ category }}</option>
+                {% else %}
+                  <option value={{ category.pk }}>{{ category }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </label>
         {% endfor %}
 
-        {% if leaves %}
+        {% if leaf_node %}
           &nbsp;
-          <label for="leaves_selector">Product:
+          <label for="product_selector">Product:
             <select name="product_selector" id="product_selector">
-              {% for product in leaves.options %}
-                {% if leaves.selected and product.name == leaves.selected %}
+              {% for product in leaf_node.options %}
+                {% if leaf_node.selected and product.name == leaf_node.selected %}
                   <option value={{ product }} selected>{{ product }}</option>
                 {% else %}
                   <option value={{ product }}>{{ product }}</option>
