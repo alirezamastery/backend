@@ -4,3 +4,5 @@ from .cpu import ProductCPU
 from .ram import RAM
 from .product_image import ProductImage
 from .changer import Changer
+from .motherboard import MB
+

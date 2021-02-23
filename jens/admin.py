@@ -4,7 +4,7 @@ from django.contrib.contenttypes.admin import GenericTabularInline
 from django.utils.html import format_html, mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from .models import ProductCPU, Category, ProductImage, Changer
+from .models import ProductCPU, Category, ProductImage, Changer, RAM
 
 
 class CategoryInline(admin.TabularInline):
@@ -40,13 +40,13 @@ class ProductAdminBase(admin.ModelAdmin):
     list_filter = ('available', 'price', 'inventory', 'manufacturer')
     search_fields = ('name', 'category__name', 'manufacturer')
 
-    fieldsets = [
-        (None, {'fields': ('category', 'name')}),
-        (_('price'), {'fields': ('price', 'discount', 'inventory')}),
-        (_('status'), {'fields': ('available',)}),
-        (_('information'), {'fields': ('manufacturer', 'description')}),
-        (_('slug'), {'fields': ('slug',)}),
-    ]
+    # fieldsets = [
+    #     (None, {'fields': ('category', 'name')}),
+    #     (_('price'), {'fields': ('price', 'discount', 'inventory')}),
+    #     (_('status'), {'fields': ('available',)}),
+    #     (_('information'), {'fields': ('manufacturer', 'description')}),
+    #     (_('slug'), {'fields': ('slug',)}),
+    # ]
 
     def image_tag_list(self, obj):
         img = obj.other_images.first()  # to get generic ProductImage objects related to the obj
@@ -59,26 +59,35 @@ class ProductAdminBase(admin.ModelAdmin):
 
     image_tag_list.short_description = 'Image'
 
+    def get_form(self, request, obj=None, change=False, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        form.base_fields['category'].widget.can_add_related = False
+        form.base_fields['category'].widget.can_change_related = False
+        return form
+
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if db_field.name == 'category':
+        if request.GET.get('category'):  # when coming from product_create view prepopulate category choice
+            kwargs['initial'] = request.GET.get('category')
+            kwargs['queryset'] = Category.objects.filter(name=request.GET.get('category'))
+        elif db_field.name == 'category':
             kwargs['queryset'] = Category.objects.filter(children__isnull=True)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-    def get_fieldsets(self, request, obj=None):  # this is not a good way to dynamically add fieldsets!
-        fields_sets = super().get_fieldsets(request, obj)
-        specific_fields = []
-        fields = obj._meta.get_fields()
-        start = False
-        for field in fields:
-            if not start and field.name != 'date_updated':
-                continue
-            else:
-                start = True
-            if start and field.name != 'date_updated':
-                if field.editable:
-                    specific_fields.append(field.name)
-        fields_sets.append((_('details'), {'fields': specific_fields}))
-        return fields_sets
+    # def get_fieldsets(self, request, obj=None):  # this is not a good way to dynamically add fieldsets!
+    #     fields_sets = super().get_fieldsets(request, obj)
+    #     specific_fields = []
+    #     fields = obj._meta.get_fields()
+    #     start = False
+    #     for field in fields:
+    #         if not start and field.name != 'date_updated':
+    #             continue
+    #         else:
+    #             start = True
+    #         if start and field.name != 'date_updated':
+    #             if field.editable:
+    #                 specific_fields.append(field.name)
+    #     fields_sets.append((_('details'), {'fields': specific_fields}))
+    #     return fields_sets
 
 
 class ProductCPUAdmin(ProductAdminBase):
@@ -97,66 +106,32 @@ class ProductCPUAdmin(ProductAdminBase):
         return super().changelist_view(request, extra_context)
 
 
+# example of modifying a view on a model:
 class ChangerAdmin(admin.ModelAdmin):
     change_list_template = 'admin/jens/change_list_changer.html'
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        extra_context['from_me'] = 'this is it'
-
-        # extra_context['categories'] = Category.objects.filter(level=0)
-        # extra_context['sub_categories'] = list()
-        extra_context['selectable_categories'] = [None]
-        extra_context['selectable_categories'][0] = {'selected': None,
-                                                     'options':  Category.objects.filter(level=0)
-                                                     }
-        extra_context['leaves'] = None
-
-        print(extra_context['selectable_categories'])
-
-        if request.method == 'POST':
-            counter = 0
-            while True:
-                print('-' * 50)
-                selected_category = None
-                try:
-                    selected_category = request.POST.get(f'category_selector_{counter}')
-                    print(counter, selected_category)
-                except:
-                    break
-                extra_context['selectable_categories'][counter]['selected'] = selected_category
-                if selected_category:
-                    selected_category_obj = Category.objects.get(name=selected_category)
-                    children = selected_category_obj.get_children()
-                    print(children)
-                    if not children:
-                        selected_product = None
-                        try:
-                            selected_product = request.POST.get(f'leaves_selector')
-                            print(selected_product)
-                        except:
-                            pass
-                        if selected_product:
-                            extra_context['leaves'] = {'selected': selected_product,
-                                                       'options':  selected_category_obj.products.all()
-                                                       }
-                            break
-                        extra_context['leaves'] = {'selected': None,
-                                                   'options':  selected_category_obj.products.all()
-                                                   }
-                        print('reached to the products')  # insert what you want to do here
-                        break
-                    print('all passed')
-                    extra_context['selectable_categories'].append({'selected': None,
-                                                                   'options':  children
-                                                                   })
-                else:
-                    break
-                counter += 1
-
+        extra_context['from_me'] = 'whatever'
         return super().changelist_view(request, extra_context)
+
+
+# class RAMAdmin(ProductAdminBase):
+#     pass
+
+    # def get_model_perms(self, request):
+    #     """
+    #     Return empty perms dict thus hiding the model from admin index.
+    #     """
+    #     return {}
+    #
+    # def get_changeform_initial_data(self, request):
+    #     name = request.GET.get('category')
+    #     print(name)
+    #     return {'category': name}
 
 
 admin.site.register(Category, CategoryAdmin)
 admin.site.register(ProductCPU, ProductCPUAdmin)
 admin.site.register(Changer, ChangerAdmin)
+# admin.site.register(RAM, RAMAdmin)

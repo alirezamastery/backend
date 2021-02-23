@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     # 'django.contrib.admin',
-    'backend.apps.MyAdminConfig',
+    'backend.apps.MyAdminConfig',  # we completely changed the admin site
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',

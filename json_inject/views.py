@@ -1,4 +1,10 @@
+import os
+import re
+import mimetypes
+from wsgiref.util import FileWrapper
+
 from django.shortcuts import render, get_object_or_404
+from django.http.response import StreamingHttpResponse
 from rest_framework import viewsets, generics
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
@@ -7,7 +13,7 @@ from django_filters import rest_framework as django_filters_for_rest
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet
 from django_filters.rest_framework import filters as djangofilters_filters
 
-from .models import Category, Sample, Genre, Band
+from .models import Category, Sample, Genre, Band, MediaFile
 from .serializers import CategorySerializer, SampleSerializer, GenreSerializer, BandSerializer, \
     GenreSerializerRecursive
 from .pagination import CustomPaginationBase
@@ -157,3 +163,62 @@ def sample_detail_view(request, sample_id, *args, **kwargs):
         return Response({}, status=404)
     serializer = SampleSerializer(obj)
     return Response(serializer.data, status=200)
+
+
+class RangeFileWrapper(object):
+
+    def __init__(self, filelike, blksize=8192, offset=0, length=None):
+        self.filelike = filelike
+        self.filelike.seek(offset, os.SEEK_SET)
+        self.remaining = length
+        self.blksize = blksize
+
+    def close(self):
+        if hasattr(self.filelike, 'close'):
+            self.filelike.close()
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.remaining is None:
+            # If remaining is None, we're reading the entire file.
+            data = self.filelike.read(self.blksize)
+            if data:
+                return data
+            raise StopIteration()
+        else:
+            if self.remaining <= 0:
+                raise StopIteration()
+            data = self.filelike.read(min(self.remaining, self.blksize))
+            if not data:
+                raise StopIteration()
+            self.remaining -= len(data)
+            return data
+
+
+def show_video(request, pk):
+    file_obj = MediaFile.objects.get(pk=pk)
+    print(file_obj.video.url)
+    context = {
+        'file_obj': file_obj
+    }
+    path = file_obj.video.path
+
+    # range_re = re.compile(r'bytes\s*=\s*(\d+)\s*-\s*(\d*)', re.I)
+    # range_header = request.META.get('HTTP_RANGE', '').strip()
+    # range_match = range_re.match(range_header)
+    # size = os.path.getsize(path)
+    # content_type, encoding = mimetypes.guess_type(path)
+    # content_type = content_type or 'application/octet-stream'
+    #
+    # print(f'range_header: {range_header}')
+    # print(f'range_match: {range_match}')
+    # print(f'size: {size}')
+    # print(f'content_type: {content_type}')
+    # resp = StreamingHttpResponse(FileWrapper(open(path, 'rb')), content_type=content_type)
+    # resp['Content-Length'] = str(size)
+    # resp['Accept-Ranges'] = 'bytes'
+    # return resp
+
+    return render(request, 'json_inject/video.html', context=context)

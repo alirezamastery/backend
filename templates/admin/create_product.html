@@ -1,0 +1,63 @@
+{% extends "admin/base_site.html" %}
+
+{# copied from change_list.html for styles.there are other things here that I don't know about #}
+{% load i18n admin_urls static admin_list %}
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" type="text/css" href="{% static "admin/css/changelists.css" %}">
+  {% if cl.formset %}
+    <link rel="stylesheet" type="text/css" href="{% static "admin/css/forms.css" %}">
+  {% endif %}
+  {% if cl.formset or action_form %}
+    <script src="{% url 'admin:jsi18n' %}"></script>
+  {% endif %}
+  {{ media.css }}
+  {% if not actions_on_top and not actions_on_bottom %}
+    <style>
+      #changelist table thead th:first-child {
+        width: inherit
+      }
+    </style>
+  {% endif %}
+{% endblock %}
+
+<style>
+  .test {
+    background-color: #00cc66;
+  }
+</style>
+
+{# as suggested in the docs we use this block to display our context #}
+{% block content %}
+
+  <h1>{{ from_me }}</h1>
+  <div class="changelist-form-container">
+    <form id="changelist" method="POST">
+      <div class="actions">
+        {% csrf_token %}
+
+        {% for level in  levels %}
+          <label for="categs_{{ forloop.counter0 }}">
+            <select name="category_selector_{{ forloop.counter0 }}"
+                    id="categs_{{ forloop.counter0 }}"
+                    onchange="this.form.submit()"
+            >
+              {% for category in level.options %}
+                {% if level.selected and category.name == level.selected %}
+                  <option value={{ category.pk }} selected>{{ category.name }}</option>
+                {% else %}
+                  <option value={{ category.pk }}>{{ category.name }}</option>
+                {% endif %}
+              {% endfor %}
+            </select>
+          </label>
+        {% endfor %}
+
+        <button class="button" type="submit">select</button>
+        &nbsp;
+      </div>
+    </form>
+  </div>
+
+
+{% endblock %}

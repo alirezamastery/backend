@@ -21,7 +21,8 @@ def validate_positive_number(value):
 
 
 class ProductBase(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=False, related_name='products')
+    # category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=False,
+    #                              related_name='products')
 
     name = models.CharField(max_length=500, blank=False)
     price = models.IntegerField(blank=False, validators=[MinValueValidator(0)])
@@ -66,5 +67,5 @@ class ProductBase(models.Model):
 
     def in_stock(self):
         return self.inventory > 0
-    in_stock.boolean = True
 
+    in_stock.boolean = True

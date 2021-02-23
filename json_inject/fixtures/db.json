@@ -1,0 +1,340 @@
+[
+  {
+    "model": "json_inject.category",
+    "pk": 1,
+    "fields": {
+      "name": "mobile",
+      "parent": null,
+      "slug": "mobile"
+    }
+  },
+  {
+    "model": "json_inject.category",
+    "pk": 2,
+    "fields": {
+      "name": "CPU",
+      "parent": null,
+      "slug": "cpu"
+    }
+  },
+  {
+    "model": "json_inject.category",
+    "pk": 3,
+    "fields": {
+      "name": "Intel",
+      "parent": 2,
+      "slug": "intel"
+    }
+  },
+  {
+    "model": "json_inject.category",
+    "pk": 4,
+    "fields": {
+      "name": "AMD",
+      "parent": 2,
+      "slug": "amd"
+    }
+  },
+  {
+    "model": "json_inject.sample",
+    "pk": 1,
+    "fields": {
+      "category": 1,
+      "name": "iphone",
+      "image": "default.jpg",
+      "description": "",
+      "created_date": "2020-12-24T17:41:55.459Z",
+      "inventory": 5,
+      "slug": "iphone"
+    }
+  },
+  {
+    "model": "json_inject.sample",
+    "pk": 2,
+    "fields": {
+      "category": 4,
+      "name": "R7 3700X",
+      "image": "default.jpg",
+      "description": "",
+      "created_date": "2020-12-24T17:41:55.459Z",
+      "inventory": 5,
+      "slug": "r7-3700x"
+    }
+  },
+  {
+    "model": "json_inject.sample",
+    "pk": 3,
+    "fields": {
+      "category": 4,
+      "name": "R9 5900X",
+      "image": "default.jpg",
+      "description": "",
+      "created_date": "2020-12-24T17:41:55.459Z",
+      "inventory": 100,
+      "slug": "r9-5900x"
+    }
+  },
+  {
+    "model": "json_inject.sample",
+    "pk": 4,
+    "fields": {
+      "category": 3,
+      "name": "i9 9900k",
+      "image": "default.jpg",
+      "description": "",
+      "created_date": "2020-12-24T17:41:55.459Z",
+      "inventory": 10,
+      "slug": "i9-9900k"
+    }
+  },
+  {
+    "model": "json_inject.sample",
+    "pk": 5,
+    "fields": {
+      "category": 3,
+      "name": "i9 10900k",
+      "image": "default.jpg",
+      "description": "<p>test <img alt=\"\" src=\"/media/media/images/2020/12/25/1cff518d4afcce11b5db7e0b0568f9303f982f1f_1600769426.jpg\" style=\"height:600px; width:600px\" /></p>",
+      "created_date": "2020-12-24T17:41:55.459Z",
+      "inventory": 100,
+      "slug": "i9-10900k"
+    }
+  },
+  {
+    "model": "json_inject.genre",
+    "pk": 10,
+    "fields": {
+      "name": "mobile",
+      "parent": null,
+      "lft": 1,
+      "rght": 6,
+      "tree_id": 2,
+      "level": 0
+    }
+  },
+  {
+    "model": "json_inject.genre",
+    "pk": 11,
+    "fields": {
+      "name": "apple",
+      "parent": 10,
+      "lft": 2,
+      "rght": 3,
+      "tree_id": 2,
+      "level": 1
+    }
+  },
+  {
+    "model": "json_inject.genre",
+    "pk": 12,
+    "fields": {
+      "name": "samsung",
+      "parent": 10,
+      "lft": 4,
+      "rght": 5,
+      "tree_id": 2,
+      "level": 1
+    }
+  },
+  {
+    "model": "json_inject.genre",
+    "pk": 13,
+    "fields": {
+      "name": "laptop",
+      "parent": null,
+      "lft": 1,
+      "rght": 6,
+      "tree_id": 1,
+      "level": 0
+    }
+  },
+  {
+    "model": "json_inject.genre",
+    "pk": 14,
+    "fields": {
+      "name": "asus",
+      "parent": 13,
+      "lft": 2,
+      "rght": 3,
+      "tree_id": 1,
+      "level": 1
+    }
+  },
+  {
+    "model": "json_inject.genre",
+    "pk": 15,
+    "fields": {
+      "name": "dell",
+      "parent": 13,
+      "lft": 4,
+      "rght": 5,
+      "tree_id": 1,
+      "level": 1
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 3,
+    "fields": {
+      "name": "iphone 8",
+      "genre": 11,
+      "brand": "other",
+      "inventory": 0,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 4,
+    "fields": {
+      "name": "iphone X",
+      "genre": 11,
+      "brand": "other",
+      "inventory": 0,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 5,
+    "fields": {
+      "name": "Galaxy S8",
+      "genre": 12,
+      "brand": "other",
+      "inventory": 0,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 6,
+    "fields": {
+      "name": "Galaxy S10",
+      "genre": 12,
+      "brand": "other",
+      "inventory": 0,
+      "color": "blue"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 7,
+    "fields": {
+      "name": "asus1",
+      "genre": 14,
+      "brand": "asus",
+      "inventory": 10,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 8,
+    "fields": {
+      "name": "dell1",
+      "genre": 15,
+      "brand": "dell",
+      "inventory": 0,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 9,
+    "fields": {
+      "name": "asus2",
+      "genre": 14,
+      "brand": "asus",
+      "inventory": 0,
+      "color": "green"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 10,
+    "fields": {
+      "name": "asus3",
+      "genre": 14,
+      "brand": "asus",
+      "inventory": 30,
+      "color": "blue"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 11,
+    "fields": {
+      "name": "dell2",
+      "genre": 15,
+      "brand": "dell",
+      "inventory": 0,
+      "color": "green"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 12,
+    "fields": {
+      "name": "dell3",
+      "genre": 15,
+      "brand": "dell",
+      "inventory": 0,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 13,
+    "fields": {
+      "name": "dell4",
+      "genre": 15,
+      "brand": "dell",
+      "inventory": 0,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 14,
+    "fields": {
+      "name": "iphone XS",
+      "genre": 11,
+      "brand": "other",
+      "inventory": 0,
+      "color": "blue"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 15,
+    "fields": {
+      "name": "iphone 5s",
+      "genre": 11,
+      "brand": "other",
+      "inventory": 0,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 16,
+    "fields": {
+      "name": "Galaxy S20",
+      "genre": 12,
+      "brand": "other",
+      "inventory": 0,
+      "color": "red"
+    }
+  },
+  {
+    "model": "json_inject.band",
+    "pk": 17,
+    "fields": {
+      "name": "Note 10",
+      "genre": 12,
+      "brand": "other",
+      "inventory": 0,
+      "color": "green"
+    }
+  }
+]

@@ -3,3 +3,4 @@ db.sqlite3
 *.ps1
 *.sqlite3
 /static/
+/htmlcov/

@@ -146,3 +146,11 @@ class Band(models.Model):
 
     def has_inventory(self):
         return self.inventory > 0
+
+
+class MediaFile(models.Model):
+    title = models.CharField(max_length=200, blank=False)
+    video = models.FileField(upload_to='video/')
+
+    def __str__(self):
+        return str(self.title)
