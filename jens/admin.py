@@ -73,12 +73,12 @@ class ProductAdminBase(admin.ModelAdmin):
             kwargs['queryset'] = Category.objects.filter(children__isnull=True)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-    # def get_fieldsets(self, request, obj=None):  # this is not a good way to dynamically add fieldsets!
+    # def get_fieldsets(self, request, obj=None):
     #     fields_sets = super().get_fieldsets(request, obj)
     #     specific_fields = []
     #     fields = obj._meta.get_fields()
     #     start = False
-    #     for field in fields:
+    #     for field in fields:   # this is not a good way to dynamically add fieldsets!
     #         if not start and field.name != 'date_updated':
     #             continue
     #         else:

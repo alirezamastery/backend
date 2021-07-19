@@ -95,18 +95,18 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3' ,
-    #     'NAME':   BASE_DIR / 'db.sqlite3' ,
-    # }
     'default': {
-        'ENGINE':   'django.db.backends.postgresql_psycopg2',
-        'NAME':     'backend',
-        'USER':     'django',
-        'PASSWORD': 'tt123456',
-        'HOST':     'localhost',
-        'PORT':     '',
-    },
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':   BASE_DIR / 'db.sqlite3',
+    }
+    # 'default': {
+    #     'ENGINE':   'django.db.backends.postgresql_psycopg2',
+    #     'NAME':     'backend',
+    #     'USER':     'django',
+    #     'PASSWORD': 'tt123456',
+    #     'HOST':     'localhost',
+    #     'PORT':     '',
+    # },
 }
 
 # Password validation
@@ -226,7 +226,7 @@ WEBPACK_LOADER = {
 CKEDITOR_JQUERY_URL = 'https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js'
 
 CKEDITOR_UPLOAD_PATH = 'media/images/'
-CKEDITOR_IMAGE_BACKEND = "pillow"
+CKEDITOR_IMAGE_BACKEND = 'pillow'
 
 CKEDITOR_CONFIGS = {
     'default': {

@@ -1,7 +1,4 @@
 import os
-import re
-import mimetypes
-from wsgiref.util import FileWrapper
 
 from django.shortcuts import render, get_object_or_404
 from django.http.response import StreamingHttpResponse

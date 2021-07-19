@@ -36,7 +36,7 @@ class CustomPaginationBase(pagination.PageNumberPagination):
 
     def set_filter_type(self):
         if not self.model_class:
-            raise RuntimeError('model_class is no specified')
+            raise RuntimeError('model_class is not specified')
 
         fields = self.model_class._meta.get_fields()
 
